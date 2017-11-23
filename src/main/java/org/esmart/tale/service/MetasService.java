@@ -1,0 +1,59 @@
+package org.esmart.tale.service;
+
+import java.util.List;
+
+import org.esmart.tale.dto.MetaDto;
+import org.esmart.tale.model.Tmetas;
+
+public interface MetasService {
+
+    /**
+     * 根据类型和名字查询项
+     *
+     * @param type
+     * @param name
+     * @return
+     */
+    MetaDto getMeta(String type, String name);
+
+    /**
+     * 根据类型查询项目列表
+     * @param types
+     * @return
+     */
+    List<Tmetas> getMetas(String types);
+
+    /**
+     * 保存多个项目
+     * @param cid
+     * @param names
+     * @param type
+     */
+    void saveMetas(Integer cid, String names, String type);
+
+    /**
+     * 删除项目
+     * @param mid
+     */
+    void delete(int mid);
+
+    /**
+     * 保存项目
+     * @param type
+     * @param name
+     * @param mid
+     */
+    void saveMeta(String type, String name, Integer mid);
+
+    /**
+     * 保存项目
+     * @param metas
+     */
+    void saveMeta(Tmetas metas);
+
+    /**
+     * 更新项目
+     * @param metas
+     */
+    void update(Tmetas metas);
+}

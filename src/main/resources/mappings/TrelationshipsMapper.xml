@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.esmart.tale.mapper.TrelationshipsMapper" >
+  <resultMap id="BaseResultMap" type="org.esmart.tale.model.Trelationships" >
+    <id column="cid" property="cid" jdbcType="INTEGER" />
+    <id column="mid" property="mid" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <select id="queryCountByMid" resultType="java.lang.Integer"  parameterType="java.lang.Integer">
+    select 
+    count(*)
+    from t_relationships  where mid =  #{mid,jdbcType=INTEGER}
+  </select>
+  <select id="queryCountByObj" resultType="java.lang.Integer"  parameterType="org.esmart.tale.model.Trelationships">
+    select 
+    count(*)
+    from t_relationships  where mid =  #{mid} and cid=#{cid}
+  </select>
+  <select id="queryObj" resultMap="BaseResultMap"  parameterType="org.esmart.tale.model.Trelationships">
+    select 
+    *
+    from t_relationships  where 1=1
+    <if test="mid != null" >
+    mid =  #{mid} 
+    </if>
+    <if test="cid != null" >
+    and cid=#{cid}
+    </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="org.esmart.tale.model.Trelationships" >
+    delete from t_relationships
+    where 1=1 
+    <if test="cid != null" >
+    	and cid = #{cid,jdbcType=INTEGER}
+    </if>
+    <if test="mid != null" >
+      and mid = #{mid,jdbcType=INTEGER}
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.esmart.tale.model.Trelationships" >
+    insert into t_relationships (cid, mid)
+    values (#{cid,jdbcType=INTEGER}, #{mid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.esmart.tale.model.Trelationships" >
+    insert into t_relationships
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="mid != null" >
+        mid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="mid != null" >
+        #{mid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

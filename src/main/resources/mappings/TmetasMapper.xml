@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.esmart.tale.mapper.TmetasMapper" >
+  <resultMap id="BaseResultMap" type="org.esmart.tale.model.Tmetas" >
+    <id column="mid" property="mid" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="slug" property="slug" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="parent" property="parent" jdbcType="INTEGER" />
+  </resultMap>
+  <!-- 数据传输对象 -->
+    <resultMap id="MetaDtoResultMap" type="org.esmart.tale.dto.MetaDto" extends="BaseResultMap" >
+    <result column="count" property="count" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mid, name, slug, type, description, sort, parent
+  </sql>
+  <!-- 获取随机数据 未带分页 -->
+  <select id="randomMetaDtasByMap" resultMap="MetaDtoResultMap" parameterType="java.util.Map" >
+    select a.*, count(b.cid) as count from t_metas a 
+    left join t_relationships b on a.mid = b.mid 
+    where a.mid in  (select mid from t_metas where type = #{type} order by rand() * mid) 
+    group by a.mid order by count desc, a.mid desc
+  </select>
+  <!-- 获取最新数据 未带分页 -->
+  <select id="selectMetaDtasByMap" resultMap="MetaDtoResultMap" parameterType="java.util.Map" >
+    select a.*, count(b.cid) as count from t_metas a  
+    left join t_relationships b on a.mid = b.mid 
+    where a.type = #{type} group by a.mid order by count desc, a.mid desc
+  </select>
+  <select id="selectMetaDtaByMap" resultMap="MetaDtoResultMap" parameterType="java.util.Map" >
+    select a.*, count(b.cid) as count from t_metas a left join 
+    t_relationships b on a.mid = b.mid 
+    where a.type = #{type} and a.name = #{name} group by a.mid
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_metas
+    where mid = #{mid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_metas
+    where type = #{type,jdbcType=VARCHAR} order by sort desc ,mid desc
+  </select>
+  <select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_metas
+    where 1=1  
+    <if test="name != null" >
+     and name = #{name,jdbcType=VARCHAR} 
+    </if>
+    <if test="type != null" >
+     and type = #{type,jdbcType=VARCHAR}
+    </if>
+    order by sort desc ,mid desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_metas
+    where mid = #{mid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.esmart.tale.model.Tmetas" >
+    insert into t_metas (mid, name, slug, 
+      type, description, sort, 
+      parent)
+    values (#{mid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{slug,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
+      #{parent,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.esmart.tale.model.Tmetas" >
+    insert into t_metas
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mid != null" >
+        mid,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="slug != null" >
+        slug,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="parent != null" >
+        parent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mid != null" >
+        #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="slug != null" >
+        #{slug,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="parent != null" >
+        #{parent,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.esmart.tale.model.Tmetas" >
+    update t_metas
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="slug != null" >
+        slug = #{slug,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="parent != null" >
+        parent = #{parent,jdbcType=INTEGER},
+      </if>
+    </set>
+    where mid = #{mid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.esmart.tale.model.Tmetas" >
+    update t_metas
+    set name = #{name,jdbcType=VARCHAR},
+      slug = #{slug,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      parent = #{parent,jdbcType=INTEGER}
+    where mid = #{mid,jdbcType=INTEGER}
+  </update>
+</mapper>

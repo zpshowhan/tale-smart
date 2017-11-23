@@ -1,0 +1,41 @@
+#macro pageNav(pageInfo, prevText, nextText, prefix)
+<ol class="page-navigator">
+    #if(pageInfo.hasPreviousPage)
+    <li class="prev"><a href="${ctx()}/${prefix}/${pageInfo.prePage}">${prevText}</a></li>
+    #end
+
+    #for(navIndex : pageInfo.navigatepageNums)
+    <li #if(pageInfo.pageNum== navIndex) class="current" #end><a href="${ctx()}/page/${navIndex}">${navIndex}</a></li>
+    #end
+
+    #if(pageInfo.hasNextPage)
+    <li class="next"><a href="${ctx()}/${prefix}/${pageInfo.nextPage}">${nextText}</a></li>
+    #end
+</ol>
+#end
+
+#macro pageAdminNav(pageInfo)
+<div class="clearfix"></div>
+<ul class="pagination m-b-5 pull-right">
+    #if(pageInfo.hasPreviousPage)
+    <li>
+        <a href="page=${pageInfo.prePage}" aria-label="Previous">
+            <i class="fa fa-angle-left"></i>&nbsp;上一页
+        </a>
+    </li>
+    #end
+
+    #for(nav : pageInfo.navigatepageNums)
+    <li #if(nav== pageInfo.pageNum) class="active" #end><a href="?page=${nav}">${nav}</a></li>
+    #end
+
+    #if(pageInfo.hasNextPage)
+    <li>
+        <a href="?page=${pageInfo.nextPage}" aria-label="Next">
+            下一页&nbsp;<i class="fa fa-angle-right"></i>
+        </a>
+    </li>
+    #end
+    <li><span>共${pageInfo.pages}页</span></li>
+</ul>
+#end

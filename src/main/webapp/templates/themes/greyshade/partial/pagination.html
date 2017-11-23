@@ -1,0 +1,7 @@
+#if(pos == 'prev' && articles.hasPreviousPage)
+<a class="next" title="" href="${page_prefix}/${articles.prePage}">${text}</a>
+#end
+
+#if(pos == 'next' && articles.hasNextPage)
+<a class="next" title="" href="${page_prefix}/${articles.nextPage}">${text}</a>
+#end
